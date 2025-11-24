@@ -2,6 +2,7 @@ package com.micropayment.userservice.mapper;
 
 import com.micropayment.userservice.model.dto.JwtDto;
 import com.micropayment.userservice.model.dto.RegisterDto;
+import com.micropayment.userservice.model.dto.UserInfoDto;
 import com.micropayment.userservice.model.entity.Account;
 import com.micropayment.userservice.model.request.RegisterRequest;
 import org.mapstruct.Mapper;
@@ -19,4 +20,6 @@ public interface UserMapper {
     RegisterDto mappingAccountToDto(Account account);
     @Mapping(source = "id",target = "userId")
     JwtDto mappingAccountToJwtDto(Account account);
+
+    UserInfoDto mappingToUserInfoDto(Account account);
 }

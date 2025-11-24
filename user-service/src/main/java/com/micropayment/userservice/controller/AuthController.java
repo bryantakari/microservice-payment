@@ -29,16 +29,9 @@ public class AuthController {
                                                                     LoginRequest request) {
         return new ResponseEntity<>(authService.loginAccount(request), HttpStatus.OK);
     }
-
-    @GetMapping("/validate-token")
-    public ResponseEntity<BaseValueResponse<Boolean>> validateToken() {
-
-        return new ResponseEntity<>(authService.validateToken(), HttpStatus.OK);
-    }
-
-    @GetMapping("/refresh-token")
-    public ResponseEntity<BaseValueResponse<LoginDto>> loginAccount(
-            @RequestParam String refreshToken) {
-        return new ResponseEntity<>(authService.refreshToken(refreshToken), HttpStatus.OK);
-    }
+//    @GetMapping("/refresh-token")
+//    public ResponseEntity<BaseValueResponse<LoginDto>> loginAccount(
+//            @RequestParam String refreshToken) {
+//        return new ResponseEntity<>(authService.refreshToken(refreshToken), HttpStatus.OK);
+//    }
 }

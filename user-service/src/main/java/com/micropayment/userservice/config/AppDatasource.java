@@ -2,6 +2,7 @@ package com.micropayment.userservice.config;
 
 import com.micropayment.userservice.config.properties.DatasourceProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.flyway.autoconfigure.FlywayDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -25,14 +26,14 @@ public class AppDatasource {
         return new com.zaxxer.hikari.HikariDataSource(cfg);
     }
 
-//    @Bean
-//    @org.springframework.boot.autoconfigure.flyway.FlywayDataSource // Flyway will use this one
-//    public DataSource flywayDataSource() {
-//        var cfg = new com.zaxxer.hikari.HikariConfig();
-//        cfg.setDriverClassName("org.postgresql.Driver");
-//        cfg.setJdbcUrl(System.getenv("SPRING_DATASOURCE_URL"));
-//        cfg.setUsername(System.getenv("SPRING_DATASOURCE_USERNAME"));
-//        cfg.setPassword(System.getenv("SPRING_DATASOURCE_PASSWORD"));
-//        return new com.zaxxer.hikari.HikariDataSource(cfg);
-//    }
+    @Bean
+    @FlywayDataSource
+    public DataSource flywayDataSource() {
+        var cfg = new com.zaxxer.hikari.HikariConfig();
+        cfg.setDriverClassName("org.postgresql.Driver");
+        cfg.setJdbcUrl(System.getenv("SPRING_DATASOURCE_URL"));
+        cfg.setUsername(System.getenv("SPRING_DATASOURCE_USERNAME"));
+        cfg.setPassword(System.getenv("SPRING_DATASOURCE_PASSWORD"));
+        return new com.zaxxer.hikari.HikariDataSource(cfg);
+    }
 }

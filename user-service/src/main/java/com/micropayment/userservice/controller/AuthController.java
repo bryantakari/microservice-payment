@@ -1,0 +1,44 @@
+package com.micropayment.userservice.controller;
+
+import com.micropayment.userservice.common.response.BaseValueResponse;
+import com.micropayment.userservice.model.dto.LoginDto;
+import com.micropayment.userservice.model.dto.RegisterDto;
+import com.micropayment.userservice.model.request.LoginRequest;
+import com.micropayment.userservice.model.request.RegisterRequest;
+import com.micropayment.userservice.service.AuthService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/v1/auth")
+@AllArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity<BaseValueResponse<RegisterDto>> registerAccount(@RequestBody
+                                                                          RegisterRequest request) {
+        return new ResponseEntity<>(authService.registerAccount(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<BaseValueResponse<LoginDto>> loginAccount(@RequestBody
+                                                                    LoginRequest request) {
+        return new ResponseEntity<>(authService.loginAccount(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/validate-token")
+    public ResponseEntity<BaseValueResponse<Boolean>> validateToken() {
+
+        return new ResponseEntity<>(authService.validateToken(), HttpStatus.OK);
+    }
+
+    @GetMapping("/refresh-token")
+    public ResponseEntity<BaseValueResponse<LoginDto>> loginAccount(
+            @RequestParam String refreshToken) {
+        return new ResponseEntity<>(authService.refreshToken(refreshToken), HttpStatus.OK);
+    }
+}

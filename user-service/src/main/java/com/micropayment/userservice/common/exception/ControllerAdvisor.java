@@ -40,7 +40,6 @@ public class ControllerAdvisor {
                 .details(ex.getDetails()).build();
         BaseErrorResponse response =
                 BaseErrorResponse.builder().error(errorMessage).build();
-        System.out.println("JAJAJA");
         return ResponseEntity.status(HttpStatus.valueOf(ex.getHttpStatusValue()))
                 .contentType(APPLICATION_JSON)
                 .body(response);

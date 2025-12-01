@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * User Service Implementation.
+ */
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -27,7 +30,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Account insertAccount(Account account) {
-        return repository.save(account);
+        try{
+            return repository.save(account);
+        }catch (Exception e){
+            throw new ServiceException("Insert New Account to database failed!",ApplicationErrorCode.DATABASE_ERROR);
+        }
     }
 
     @Override

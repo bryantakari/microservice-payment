@@ -1,5 +1,5 @@
 -- Table
-CREATE TABLE account (
+CREATE TABLE accounts (
   id               integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   username         varchar(50)  NOT NULL,
   email            varchar(50)  NOT NULL,
@@ -12,11 +12,11 @@ CREATE TABLE account (
 );
 
 -- Recommended constraints (optional but typical)
-ALTER TABLE account ADD CONSTRAINT account_username_uk UNIQUE (username);
-ALTER TABLE account ADD CONSTRAINT account_email_uk    UNIQUE (email);
+ALTER TABLE accounts ADD CONSTRAINT accounts_username_uk UNIQUE (username);
+ALTER TABLE accounts ADD CONSTRAINT accounts_email_uk    UNIQUE (email);
 
 -- Auto-update updated_at on UPDATE
-CREATE OR REPLACE FUNCTION account_set_updated_at()
+CREATE OR REPLACE FUNCTION accounts_set_updated_at()
 RETURNS trigger AS $$
 BEGIN
   NEW.updated_at := now();
@@ -24,6 +24,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_account_set_updated_at
-BEFORE UPDATE ON account
-FOR EACH ROW EXECUTE FUNCTION account_set_updated_at();
+CREATE TRIGGER trg_accounts_set_updated_at
+BEFORE UPDATE ON accounts
+FOR EACH ROW EXECUTE FUNCTION accounts_set_updated_at();

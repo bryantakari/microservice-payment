@@ -1,19 +1,14 @@
 package com.micropayment.userservice.security;
 
 import com.micropayment.userservice.common.exception.ApplicationErrorCode;
-import com.micropayment.userservice.common.exception.ServiceException;
 import com.micropayment.userservice.common.exception.dto.BaseErrorResponse;
 import com.micropayment.userservice.common.exception.dto.ErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.MediaTypeEditor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.ServletWebRequest;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;

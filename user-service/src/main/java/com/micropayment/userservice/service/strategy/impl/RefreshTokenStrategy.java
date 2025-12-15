@@ -8,9 +8,11 @@ import com.micropayment.userservice.service.strategy.AbstractTokenStrategy;
 import com.micropayment.userservice.service.strategy.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.PrivateKey;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -25,9 +27,9 @@ public class RefreshTokenStrategy extends AbstractTokenStrategy<UserTokenPayload
     private RefreshTokenRepository refreshTokenRepository;
 
 
-    protected RefreshTokenStrategy(AppProperties appProperties) {
-        super(appProperties);
-    }
+//    protected RefreshTokenStrategy(AppProperties appProperties, PrivateKey privateKey) {
+//        super(appProperties,privateKey);
+//    }
 
     @Override
     public boolean support(TokenType type) {
@@ -48,7 +50,7 @@ public class RefreshTokenStrategy extends AbstractTokenStrategy<UserTokenPayload
                 .claim(TYPE_CONSTANT,TokenType.REFRESH)
                 .issuedAt(Date.from(issuedAt))
                 .expiration(Date.from(expirationInstant))
-                .signWith(this.getKey())
+                .signWith(privateKey)
                 .compact();
 
         createRefreshToken(

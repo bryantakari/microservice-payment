@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // Invalidate old refresh token in DB here
-
+        tokenService.consumeRefreshToken(request.getRefreshToken());
         String newAccess = tokenService.generateToken(TokenType.ACCESS, validationDto.getPayload().getUserId());
         String newRefresh = tokenService.generateToken(TokenType.REFRESH, validationDto.getPayload().getUserId());
 

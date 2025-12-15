@@ -61,7 +61,6 @@ public class TokenServiceImpl implements TokenService {
                 .orElseThrow(() -> new ServiceException("Refresh token invalid",ApplicationErrorCode.ITEM_NOT_FOUND));
         token.setRevoked(true);
         refreshTokenRepository.save(token);
-
         return token;
     }
 

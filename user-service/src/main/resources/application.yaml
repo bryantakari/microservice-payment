@@ -22,11 +22,14 @@ app:
     secret: ${JWT_SECRET_TOKEN}
     access-token-expiry-millis: ${JWT_ACCESS_TOKEN_EXPIRY_MILLIS}
     refresh-token-expiry-millis: ${JWT_REFRESH_TOKEN_EXPIRY_MILLIS}
-
+    private-key-path: ${JWT_PRIVATE_KEY_PATH}
+    public-key-path: ${JWT_PUBLIC_KEY_PATH}
 logging:
   pattern:
     # Add trace and span to console logs (Micrometer uses traceId/spanId keys in MDC)
     console: "%d{HH:mm:ss.SSS} %-5level traceId=%X{traceId:-} spanId=%X{spanId:-} [%thread] %logger - %msg%n"
   level:
     org:
+      springframework:
+        security=DEBUG:
       flywaydb: DEBUG

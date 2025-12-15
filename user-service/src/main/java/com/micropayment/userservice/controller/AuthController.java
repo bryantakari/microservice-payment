@@ -4,6 +4,7 @@ import com.micropayment.userservice.common.response.BaseValueResponse;
 import com.micropayment.userservice.model.dto.LoginDto;
 import com.micropayment.userservice.model.dto.RegisterDto;
 import com.micropayment.userservice.model.request.LoginRequest;
+import com.micropayment.userservice.model.request.RefreshTokenRequest;
 import com.micropayment.userservice.model.request.RegisterRequest;
 import com.micropayment.userservice.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -29,9 +30,9 @@ public class AuthController {
                                                                     LoginRequest request) {
         return new ResponseEntity<>(authService.loginAccount(request), HttpStatus.OK);
     }
-//    @GetMapping("/refresh-token")
-//    public ResponseEntity<BaseValueResponse<LoginDto>> loginAccount(
-//            @RequestParam String refreshToken) {
-//        return new ResponseEntity<>(authService.refreshToken(refreshToken), HttpStatus.OK);
-//    }
+    @PostMapping("/refresh-token")
+    public ResponseEntity<BaseValueResponse<LoginDto>> refreshToken(
+            @RequestBody RefreshTokenRequest request) {
+        return new ResponseEntity<>(authService.refreshToken(request), HttpStatus.OK);
+    }
 }

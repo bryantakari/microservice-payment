@@ -8,14 +8,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 
+import java.security.PrivateKey;
 import java.util.Date;
 
 @Service("ACCESS")
 public class AccessTokenStrategy extends AbstractTokenStrategy<UserTokenPayload> {
 
-    protected AccessTokenStrategy(AppProperties appProperties) {
-        super(appProperties);
-    }
+//    protected AccessTokenStrategy(AppProperties appProperties, PrivateKey privateKey) {
+//        super(appProperties,privateKey);
+//    }
 
     @Override
     protected String expectedType() {
@@ -42,7 +43,7 @@ public class AccessTokenStrategy extends AbstractTokenStrategy<UserTokenPayload>
                 .issuedAt(new Date())
                 .expiration(
                         new Date((new Date()).getTime() + this.getJwtProperties().getAccessTokenExpiryMillis()))
-                .signWith(this.getKey())
+                .signWith(privateKey)
                 .compact();
     }
 

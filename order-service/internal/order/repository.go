@@ -2,17 +2,36 @@ package order
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
+	"log/slog"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type Repository interface {
-	save(ctx context.Context, order Order, orderItems OrderItem) error
+	Save(ctx context.Context, order Order, orderItems OrderItem) error
 }
 
 type RepositoryImpl struct {
-	db *sql.DB
+	db  *sqlx.DB
+	log *slog.Logger
 }
 
-func (r *RepositoryImpl) save(ctx context.Context, order Order, orderItems OrderItem) error {
+func NewRepository(db *sqlx.DB, log *slog.Logger) Repository {
+	return &RepositoryImpl{
+		db:  db,
+		log: log.With("layer", "repository"),
+	}
+}
+
+func (r *RepositoryImpl) Save(ctx context.Context, order Order, orderItems OrderItem) error {
+	trx, err := r.db.BeginTx(ctx, nil)
+
+	if err == nil {
+		fmt.Println("failed open transaction")
+		return err
+	}
+	defer trx.Rollback()
+
 	return nil
 }

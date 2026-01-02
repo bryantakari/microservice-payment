@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -9,12 +9,12 @@ import (
 
 type Config struct {
 	AppPort    string
-	DBURL      string
 	DBPORT     string
 	DBUSER     string
 	DBPASSWORD string
 	DBHOST     string
 	DBNAME     string
+	DBSSLMODE  string
 }
 
 func Load() *Config {
@@ -26,13 +26,21 @@ func Load() *Config {
 		DBNAME:     getEnv("DB_NAME", ""),
 		DBPASSWORD: getEnv("DB_PASSWORD", ""),
 		DBUSER:     getEnv("DB_USER", ""),
+		DBSSLMODE:  getEnv("DB_SSLMODE", ""),
 	}
-
-	if cfg.DBURL == "" {
-		log.Fatal("DB_URL is required")
-	}
-
 	return cfg
+}
+
+func (cfg *Config) CreateDBUrl() string {
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		cfg.DBUSER,
+		cfg.DBUSER,
+		cfg.DBHOST,
+		cfg.DBPORT,
+		cfg.DBNAME,
+		cfg.DBSSLMODE,
+	)
 }
 
 func getEnv(key, fallback string) string {

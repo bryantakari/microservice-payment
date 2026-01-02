@@ -1,15 +1,24 @@
 package order
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"context"
+	"log/slog"
+)
 
 type Service interface {
-	createOrder(ctx fiber.Ctx) error
+	createOrder(ctx context.Context) error
 }
 
 type ServiceImpl struct {
+	r   Repository
+	log *slog.Logger
 }
 
-func (srv *ServiceImpl) createOrder(ctx fiber.Ctx) error {
+func NewService(r Repository, log *slog.Logger) Service {
+	return &ServiceImpl{r: r, log: log.With("layer", "service")}
+}
+
+func (srv *ServiceImpl) createOrder(ctx context.Context) error {
 
 	return nil
 }

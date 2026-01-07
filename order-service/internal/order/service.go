@@ -10,7 +10,8 @@ import (
 )
 
 type Service interface {
-	createOrder(ctx context.Context, req CreateOrderRequest) (Order, error)
+	CreateOrder(ctx context.Context, req CreateOrderRequest) (Order, error)
+	QueryListOrder(ctx context.Context, query ListOrderQuery) ([]Order, error)
 }
 
 type ServiceImpl struct {
@@ -23,7 +24,7 @@ func NewService(r Repository, log *slog.Logger, pub EventPublisher) Service {
 	return &ServiceImpl{r: r, log: log.With("layer", "service"), pub: pub}
 }
 
-func (srv *ServiceImpl) createOrder(ctx context.Context, req CreateOrderRequest) (Order, error) {
+func (srv *ServiceImpl) CreateOrder(ctx context.Context, req CreateOrderRequest) (Order, error) {
 	if len(req.Items) == 0 {
 		return Order{}, errors.New("order must have at least one item")
 	}
@@ -67,4 +68,18 @@ func (srv *ServiceImpl) createOrder(ctx context.Context, req CreateOrderRequest)
 		return Order{}, err
 	}
 	return order, nil
+}
+
+func (srv *ServiceImpl) QueryListOrder(ctx context.Context, query ListOrderQuery) ([]Order, error) {
+	if query.Limit < 10 {
+		query.Limit = 10
+	}
+
+	if query.Page < 0 {
+		query.Page = 1
+	}
+
+	offset := (query.Page - 1) * query.Limit
+
+	return srv.r.ListOrder(ctx, query, offset)
 }

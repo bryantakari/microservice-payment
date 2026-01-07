@@ -9,8 +9,15 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+var allowedSortFields = map[string]string{
+	"created_at": "created_at",
+	"total":      "total_order_status",
+	"status":     "status",
+}
+
 type Repository interface {
 	Save(ctx context.Context, order Order, orderItems []OrderItem) error
+	ListOrder(ctx context.Context, query ListOrderQuery, offset int) ([]Order, error)
 }
 
 type RepositoryImpl struct {
@@ -87,4 +94,22 @@ func (r *RepositoryImpl) Save(ctx context.Context, order Order, orderItems []Ord
 		return fmt.Errorf("commit failed: %w", err)
 	}
 	return nil
+}
+
+func (r *RepositoryImpl) ListOrder(ctx context.Context, query ListOrderQuery, offset int) ([]Order, error) {
+	sortField, notFound := allowedSortFields[query.SortBy]
+
+	if notFound {
+		sortField = "created_at"
+	}
+	strQuery := fmt.Sprintf(`
+		SELECT id, user_id, status, total_amount, currency, created_at, updated_at
+		FROM orders
+		ORDER BY %s %s
+		LIMIT $1 OFFSET $2
+	`, sortField, query.OrderBy)
+
+	var orders []Order
+	err := r.db.SelectContext(ctx, &orders, strQuery, query.Limit, offset)
+	return orders, err
 }

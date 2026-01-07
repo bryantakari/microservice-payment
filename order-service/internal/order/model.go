@@ -13,8 +13,8 @@ const (
 type Order struct {
 	ID          string      `db:"id"`
 	UserId      string      `db:"user_id"`
-	Status      OrderStatus `db:"order_status"`
-	TotalAmount int64       `db:"total_order_amount"`
+	Status      OrderStatus `db:"status"`
+	TotalAmount int64       `db:"total_amount"`
 	Currency    string      `db:"currency"`
 	CreatedAt   time.Time   `db:"created_at"`
 	UpdatedAt   time.Time   `db:"updated_at"`

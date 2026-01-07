@@ -12,3 +12,10 @@ type CreateOrderItem struct {
 	Quantity    int    `json:"qty"`
 	UnitPrice   int64  `json:"unit_price"`
 }
+
+type ListOrderQuery struct {
+	Page    int    `json:"page"`
+	Limit   int    `json:"limit"`
+	SortBy  string `json:"sort_by"`
+	OrderBy string `json:"order_by"` // asc | desc
+}

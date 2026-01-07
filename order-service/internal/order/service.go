@@ -15,11 +15,12 @@ type Service interface {
 
 type ServiceImpl struct {
 	r   Repository
+	pub EventPublisher
 	log *slog.Logger
 }
 
-func NewService(r Repository, log *slog.Logger) Service {
-	return &ServiceImpl{r: r, log: log.With("layer", "service")}
+func NewService(r Repository, log *slog.Logger, pub EventPublisher) Service {
+	return &ServiceImpl{r: r, log: log.With("layer", "service"), pub: pub}
 }
 
 func (srv *ServiceImpl) createOrder(ctx context.Context, req CreateOrderRequest) (Order, error) {

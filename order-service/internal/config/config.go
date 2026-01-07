@@ -3,12 +3,13 @@ package config
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
 
-type Config struct {
-	AppPort    string
+type DBConfig struct {
 	DBPORT     string
 	DBUSER     string
 	DBPASSWORD string
@@ -16,11 +17,30 @@ type Config struct {
 	DBNAME     string
 	DBSSLMODE  string
 }
+type KafkaConfig struct {
+	Brokers []string
+	Topics  KafkaTopics
+}
+
+type KafkaTopics struct {
+	OrderCreated KafkaTopicConfig
+}
+
+type KafkaTopicConfig struct {
+	Name              string
+	Partitions        int
+	ReplicationFactor int
+}
+
+type Config struct {
+	AppPort   string
+	DBConfig  DBConfig
+	KafkaConf KafkaConfig
+}
 
 func Load() *Config {
 	_ = godotenv.Load()
-	cfg := &Config{
-		AppPort:    getEnv("APP_PORT", "3000"),
+	dbcfg := DBConfig{
 		DBPORT:     getEnv("DB_PORT", ""),
 		DBHOST:     getEnv("DB_HOST", ""),
 		DBNAME:     getEnv("DB_NAME", ""),
@@ -28,18 +48,40 @@ func Load() *Config {
 		DBUSER:     getEnv("DB_USER", ""),
 		DBSSLMODE:  getEnv("DB_SSLMODE", ""),
 	}
+	kafkaCfg := loadKafkaConfig()
+	cfg := &Config{
+		AppPort:   getEnv("APP_PORT", "3000"),
+		DBConfig:  dbcfg,
+		KafkaConf: kafkaCfg,
+	}
+
 	return cfg
+}
+func loadKafkaConfig() KafkaConfig {
+	partitions, _ := strconv.Atoi(getEnv("KAFKA_ORDER_CREATED_PARTITIONS", "1"))
+	replication, _ := strconv.Atoi(getEnv("KAFKA_ORDER_CREATED_REPLICATION", "1"))
+
+	return KafkaConfig{
+		Brokers: strings.Split(getEnv("KAFKA_BROKERS", ""), ","),
+		Topics: KafkaTopics{
+			OrderCreated: KafkaTopicConfig{
+				Name:              getEnv("KAFKA_ORDER_CREATED_TOPIC", "order.created"),
+				Partitions:        partitions,
+				ReplicationFactor: replication,
+			},
+		},
+	}
 }
 
 func (cfg *Config) CreateDBUrl() string {
 	return fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
-		cfg.DBUSER,
-		cfg.DBUSER,
-		cfg.DBHOST,
-		cfg.DBPORT,
-		cfg.DBNAME,
-		cfg.DBSSLMODE,
+		cfg.DBConfig.DBUSER,
+		cfg.DBConfig.DBUSER,
+		cfg.DBConfig.DBHOST,
+		cfg.DBConfig.DBPORT,
+		cfg.DBConfig.DBNAME,
+		cfg.DBConfig.DBSSLMODE,
 	)
 }
 
